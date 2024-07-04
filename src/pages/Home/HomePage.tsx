@@ -4,20 +4,22 @@ import { showRightTopAlert } from "../../components/ui/Alert/ShowRightToAlert";
 import { commentDataSchema } from "../../type/CommentType";
 import MainCommentBox from "../../components/form/MainCommentBox";
 import MainForm from "../../components/form/MainForm";
+import { useAddCommentMutation } from "../../redux/features/comment/commentApi";
+import { Button } from "antd";
 
 const HomePage = () => {
+  const [addComment] = useAddCommentMutation();
+
   const handleSubmit: SubmitErrorHandler<FieldValues> = async (data) => {
     const { comment } = data;
 
     try {
-      // Check if extrasData exists, then it's an update
-      const response = await useAddComment({
+      const response = await addComment({
         comment: comment,
       });
 
       if ("data" in response) {
         showRightTopAlert("success", "Success", `${response.data.message}`);
-        // No need to increment plansCurrentStep or call handleNext for updating
       } else {
         showRightTopAlert(
           "error",
@@ -36,6 +38,13 @@ const HomePage = () => {
         resolver={zodResolver(commentDataSchema)}
       >
         <MainCommentBox name={"comment"} label={"Add Comment"} />
+        <Button
+          htmlType="submit"
+          className={`bg-blue-primary h-[38px] px-[14px] py-[8px] text-white-primary`}
+        >
+          Add Comment
+          {/* {isLoading ? <ButtonLoadingAnimation /> : "Add Comment"} */}
+        </Button>
       </MainForm>
     </div>
   );
