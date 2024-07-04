@@ -1,52 +1,19 @@
-import { FieldValues, SubmitErrorHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { showRightTopAlert } from "../../components/ui/Alert/ShowRightToAlert";
-import { commentDataSchema } from "../../type/CommentType";
-import MainCommentBox from "../../components/form/MainCommentBox";
-import MainForm from "../../components/form/MainForm";
-import { useAddCommentMutation } from "../../redux/features/comment/commentApi";
-import { Button } from "antd";
+import CommentBox from "../../components/layout/CommentBox/CommentBox";
+import CommentSection from "../../components/layout/CommentBox/CommentSection";
 
 const HomePage = () => {
-  const [addComment] = useAddCommentMutation();
-
-  const handleSubmit: SubmitErrorHandler<FieldValues> = async (data) => {
-    const { comment } = data;
-
-    try {
-      const response = await addComment({
-        comment: comment,
-      });
-
-      if ("data" in response) {
-        showRightTopAlert("success", "Success", `${response.data.message}`);
-      } else {
-        showRightTopAlert(
-          "error",
-          "Error",
-          "Failed to Add Comment, please try again."
-        );
-      }
-    } catch (error) {
-      showRightTopAlert("error", "Error", "Failed to Add Comment, try again.");
-    }
-  };
   return (
-    <div className="p-10">
-      <MainForm
-        onSubmit={handleSubmit}
-        resolver={zodResolver(commentDataSchema)}
-      >
-        <MainCommentBox name={"comment"} label={"Add Comment"} />
-        <Button
-          htmlType="submit"
-          className={`bg-blue-primary h-[38px] px-[14px] py-[8px] text-white-primary`}
-        >
-          Add Comment
-          {/* {isLoading ? <ButtonLoadingAnimation /> : "Add Comment"} */}
-        </Button>
-      </MainForm>
-    </div>
+    <section className="bg-white dark:bg-gray-900 py-8 lg:py-16 antialiased">
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
+            Comments (20)
+          </h2>
+        </div>
+        <CommentBox />
+        <CommentSection />
+      </div>
+    </section>
   );
 };
 

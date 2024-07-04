@@ -4,6 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import InfoIcon from "../ui/Icon/InfoIcon";
 
 const { TextArea } = Input;
+
 type TInputProps = {
   name: string;
   label?: string;
@@ -11,6 +12,7 @@ type TInputProps = {
   disabled?: boolean;
   defaulValue?: any;
 };
+
 const MainCommentBox = ({
   name,
   label,
@@ -20,7 +22,7 @@ const MainCommentBox = ({
 }: TInputProps) => {
   const { control } = useFormContext();
   return (
-    <div style={{ width: "full" }}>
+    <div className="w-full">
       <Controller
         name={name}
         control={control}
@@ -28,8 +30,8 @@ const MainCommentBox = ({
           <Form.Item
             label={
               <label
-                className={` ${
-                  error ? "text-[#F00]" : "text-black-softlight"
+                className={`${
+                  error ? "text-[#F00]" : "text-slate-50"
                 } text-[12px] font-semibold`}
               >
                 {label}
@@ -43,16 +45,21 @@ const MainCommentBox = ({
               defaultValue={defaulValue}
               id={name}
               disabled={disabled}
-              className={`fbinput ${
+              className={`px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 dark:text-white dark:placeholder-gray-400 dark:bg-gray-800 ${
                 error
                   ? "border-[#F00] hover:border-[#F00] focus:border-[#F00]"
-                  : "border-red-100 border-2"
-              } `}
-            ></TextArea>
+                  : "border-gray-200 border-2"
+              }`}
+              style={{
+                backgroundColor: "#1F2937",
+                transition: "border-color 0.2s ease-in-out",
+                padding: "10px 15px",
+              }}
+            />
             {error && (
-              <div className="flex-start gap-1 mt-[5px]">
-                <InfoIcon size="18" fill="#F00"></InfoIcon>
-                <small className="text-[#F00] text-[12px] text font-normal">
+              <div className="flex items-start gap-1 mt-[5px]">
+                <InfoIcon size="18" fill="#F00" />
+                <small className="text-[#F00] text-[12px] font-normal">
                   {error.message}
                 </small>
               </div>
