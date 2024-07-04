@@ -1,7 +1,14 @@
+import MainCommentBox from "./components/form/MainCommentBox";
+
 function App() {
   return (
     <>
-      <h2>this is app</h2>
+      <MainCommentBox
+        name={"hello"}
+        label={"hello"}
+        placeholder={"hello"}
+        defaulValue={"hello"}
+      />
     </>
   );
 }
