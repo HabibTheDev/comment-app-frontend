@@ -19,7 +19,7 @@ type TFormProps = {
   children: ReactNode;
 } & TFormConfig;
 
-const FBForm = ({
+const MainForm = ({
   onSubmit,
   children,
   defaultValues,
@@ -61,4 +61,4 @@ const FBForm = ({
   );
 };
 
-export default FBForm;
+export default MainForm;
