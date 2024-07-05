@@ -35,18 +35,19 @@ const LoginForm = () => {
     try {
       setLoading(true);
       const res = await loginUser(loginInfo).unwrap();
+
       if (res) {
-        if (res?.data?.accessToken) {
-          const user = verifyToken(res?.data?.accessToken) as TUser;
+        if (res?.data?.token) {
+          const user = verifyToken(res?.data?.token) as TUser;
           const saveUser = {
             user,
-            token: res?.data?.accessToken,
+            token: res?.data?.token,
           };
 
           dispatch(setUser(saveUser));
           navigate(`/`, { replace: true });
           methods.reset();
-          setLoading(false);
+          toast.success("Login successful!");
         }
       }
     } catch (error: any) {
@@ -55,9 +56,11 @@ const LoginForm = () => {
       } else {
         toast.error("An unexpected error occurred. Please try again later.");
       }
+    } finally {
       setLoading(false);
     }
   };
+
   return (
     <div>
       <div className="max-w-screen-lg mx-auto ">
@@ -68,34 +71,27 @@ const LoginForm = () => {
           <FormProvider {...methods}>
             <Form layout="vertical" onFinish={methods.handleSubmit(onSubmit)}>
               <MainInput
-                type="text"
-                label="Username"
-                name="Username"
-                placeholder="Enter Username"
-              ></MainInput>
-              <MainInput
                 type="email"
                 label="Email"
                 name="email"
                 placeholder="Enter email"
-              ></MainInput>
+              />
               <MainPassword
                 name="password"
                 label="Password"
                 type="password"
                 placeholder="Enter password"
-              ></MainPassword>
-
+              />
               <Button className="w-full mt-10 submit-button" htmlType="submit">
                 {loading || isLoading ? <ButtonLoadingAnimation /> : "Login"}
               </Button>
             </Form>
           </FormProvider>
         </div>
-        <p className="text-center mt-5 fontWeight-semiboald text-14">
+        <p className="text-center mt-5 fontWeight-semibold text-14">
           Don’t have an account?
           <Link to="/sign-up">
-            <span className="text-blue-primary">Sign up</span>
+            <span className="text-blue-primary"> Sign up</span>
           </Link>
         </p>
       </div>

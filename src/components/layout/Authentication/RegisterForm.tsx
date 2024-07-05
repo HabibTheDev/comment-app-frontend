@@ -41,7 +41,7 @@ const RegisterForm = () => {
     try {
       setError("");
       const userInfo = {
-        fullName: data.username,
+        username: data.username,
         email: data.email,
         password: data.password,
       };

@@ -3,9 +3,8 @@ import { RootState } from "../../store";
 
 export type TUser = {
   id: string;
-  role: string;
   email: string;
-  brand_id?: number;
+  username: string;
 };
 
 export type TAuthState = {
