@@ -44,7 +44,7 @@ const LoginForm = () => {
           };
 
           dispatch(setUser(saveUser));
-          navigate(`/${(user as TUser)?.role}/home`, { replace: true });
+          navigate(`/`, { replace: true });
           methods.reset();
           setLoading(false);
         }
@@ -67,6 +67,12 @@ const LoginForm = () => {
         <div>
           <FormProvider {...methods}>
             <Form layout="vertical" onFinish={methods.handleSubmit(onSubmit)}>
+              <MainInput
+                type="text"
+                label="Username"
+                name="Username"
+                placeholder="Enter Username"
+              ></MainInput>
               <MainInput
                 type="email"
                 label="Email"
