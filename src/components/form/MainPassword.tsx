@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, Input } from "antd";
 import { Controller } from "react-hook-form";
-import redInfo from "../../assets/myFleetAllsvg/redInfo.svg";
+
 type TInputProps = {
   name: string;
   type: string;
@@ -49,7 +49,6 @@ const MainPassword = ({
             ></Input.Password>
             {error && (
               <div className="flex-start gap-1 mt-[5px]">
-                <img src={redInfo} alt="" />
                 <small className="text-[#F00] text-[12px] text font-normal">
                   {error.message}
                 </small>

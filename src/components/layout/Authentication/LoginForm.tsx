@@ -60,11 +60,11 @@ const LoginForm = () => {
   };
   return (
     <div>
-      <div className="w-[380px]">
+      <div className="max-w-screen-lg mx-auto ">
         <h1 className="text-3xl text-black-primary font-bold text-center mb-8">
           Login
         </h1>
-        <div>
+        <div className="max-w-screen-sm mx-auto">
           <FormProvider {...methods}>
             <Form layout="vertical" onFinish={methods.handleSubmit(onSubmit)}>
               <MainInput

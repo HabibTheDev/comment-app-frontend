@@ -1,4 +1,4 @@
-import "../../styles/component/ButtonLoadingAnimation.css";
+import "./ButtonLoadingAnimation.css";
 
 const ButtonLoadingAnimation = () => {
   return (

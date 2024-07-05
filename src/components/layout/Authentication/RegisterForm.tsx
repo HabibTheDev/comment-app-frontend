@@ -45,9 +45,10 @@ const RegisterForm = () => {
         email: data.email,
         password: data.password,
       };
-      console.log(userInfo);
 
       const res = await registerdUser(userInfo).unwrap();
+
+      console.log(registerdUser);
 
       if (res) {
         const registerEmail = {
@@ -82,11 +83,11 @@ const RegisterForm = () => {
   };
   return (
     <div>
-      <div className="w-[380px]">
+      <div className="max-w-screen-lg mx-auto">
         <h1 className="text-3xl  text-black-primary font-bold text-center mb-8">
           Sign Up
         </h1>
-        <div>
+        <div className="max-w-screen-sm mx-auto">
           <FormProvider {...methods}>
             <Form layout="vertical" onFinish={methods.handleSubmit(onSubmit)}>
               <MainInput

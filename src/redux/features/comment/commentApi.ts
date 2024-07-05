@@ -1,13 +1,32 @@
 import baseApi from "../../api/baseApi";
 
-const authManagementApi = baseApi.injectEndpoints({
+const commentManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     addComment: builder.mutation({
-      query: ({ comment, userId }) => {
+      query: ({ comment }) => {
         return {
-          url: `/comment/add/${userId}`,
+          url: `/comment/`,
           method: "POST",
           body: comment,
+        };
+      },
+      invalidatesTags: ["comment"],
+    }),
+    UpdateComment: builder.mutation({
+      query: ({ comment, commentId }) => {
+        return {
+          url: `/comment/${commentId}`,
+          method: "PUT",
+          body: comment,
+        };
+      },
+      invalidatesTags: ["comment"],
+    }),
+    deleteComment: builder.mutation({
+      query: ({ commentId }) => {
+        return {
+          url: `/comment/${commentId}`,
+          method: "DELETE",
         };
       },
       invalidatesTags: ["comment"],
@@ -15,4 +34,8 @@ const authManagementApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useAddCommentMutation } = authManagementApi;
+export const {
+  useAddCommentMutation,
+  useDeleteCommentMutation,
+  useUpdateCommentMutation,
+} = commentManagementApi;

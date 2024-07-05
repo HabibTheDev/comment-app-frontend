@@ -12,7 +12,7 @@ import { logOut, setUser } from "../features/auth/authSlice";
 
 //customized base Query and every backend data get request send accessToken
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:8000/api",
+  baseUrl: "http://localhost:5000/api",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;

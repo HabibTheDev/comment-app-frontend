@@ -6,9 +6,10 @@ import MainCommentBox from "../../form/MainCommentBox";
 import { Button } from "antd";
 import { commentDataSchema } from "../../../type/CommentType";
 import { zodResolver } from "@hookform/resolvers/zod";
+import ButtonLoadingAnimation from "../../ui/Animation/ButtonAnimation";
 
 const CommentBox = () => {
-  const [addComment] = useAddCommentMutation();
+  const [addComment, { isLoading }] = useAddCommentMutation();
 
   const handleSubmit: SubmitErrorHandler<FieldValues> = async (data) => {
     const { comment } = data;
@@ -46,8 +47,7 @@ const CommentBox = () => {
           htmlType="submit"
           className={`inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800`}
         >
-          Add Comment
-          {/* {isLoading ? <ButtonLoadingAnimation /> : "Add Comment"} */}
+          {isLoading ? <ButtonLoadingAnimation /> : "Add Comment"}
         </Button>
       </MainForm>
     </div>
