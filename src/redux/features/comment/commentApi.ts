@@ -1,17 +1,28 @@
 import baseApi from "../../api/baseApi";
 
+interface GetCommentsParams {
+  sort?: "newest" | "mostLiked" | "mostDisliked";
+  page?: number;
+  limit?: number;
+}
+
 const commentManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllComment: builder.query({
-      query: () => {
+      query: ({ sort = "newest", page = 1, limit = 10 }: GetCommentsParams) => {
+        const params = new URLSearchParams({
+          sort,
+          page: page.toString(),
+          limit: limit.toString(),
+        }).toString();
+
         return {
-          url: `/comment`,
+          url: `/comment?${params}`,
           method: "GET",
         };
       },
       providesTags: ["comment"],
     }),
-
     addComment: builder.mutation({
       query: (comment) => {
         return {
@@ -79,10 +90,11 @@ const commentManagementApi = baseApi.injectEndpoints({
       invalidatesTags: ["comment"],
     }),
     editReply: builder.mutation({
-      query: ({ commentId, replyId }) => {
+      query: ({ replyId, commentId, comment: reply }) => {
         return {
           url: `/comment/${commentId}/reply/${replyId}/edit`,
           method: "PUT",
+          body: { reply },
         };
       },
       invalidatesTags: ["comment"],

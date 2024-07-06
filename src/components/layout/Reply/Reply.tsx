@@ -8,6 +8,7 @@ import {
 } from "../../../redux/features/comment/commentApi";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
+import { formatDistanceToNow } from "date-fns";
 
 interface ReplyProps {
   reply: any;
@@ -66,9 +67,9 @@ const Reply = ({ reply, user, commentId }: ReplyProps) => {
     }
   };
 
-  const handleEdit = async () => {
+  const handleEdit = async (replyId: string) => {
     try {
-      await editReply({ replyId: reply._id, content: editContent });
+      await editReply({ replyId, commentId, comment: editContent });
       setIsEditing(false);
       toast.success("Reply edited successfully.");
     } catch (error) {
@@ -105,7 +106,12 @@ const Reply = ({ reply, user, commentId }: ReplyProps) => {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
+              })}{" "}
+              (
+              {formatDistanceToNow(new Date(reply.createdAt), {
+                addSuffix: true,
               })}
+              )
             </time>
           </p>
         </div>
@@ -172,7 +178,7 @@ const Reply = ({ reply, user, commentId }: ReplyProps) => {
             <button
               type="button"
               className="text-sm font-medium text-blue-500 hover:underline"
-              onClick={handleEdit}
+              onClick={() => handleEdit(reply._id)}
             >
               Save
             </button>

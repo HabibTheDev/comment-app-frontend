@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/auth/authSlice";
+import commentReducer from "./features/comment/commentSlice";
 import {
   persistStore,
   persistReducer,
@@ -35,6 +36,7 @@ export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedLocalAuthReducer,
+    comments: commentReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
