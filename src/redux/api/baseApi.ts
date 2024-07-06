@@ -10,7 +10,6 @@ import type { BaseQueryFn } from "@reduxjs/toolkit/query";
 import { RootState } from "../store";
 import { logOut, setUser } from "../features/auth/authSlice";
 
-//customized base Query and every backend data get request send accessToken
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_URL,
   credentials: "include",

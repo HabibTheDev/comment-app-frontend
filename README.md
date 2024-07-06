@@ -1,30 +1,61 @@
-# React + TypeScript + Vite
+# Comment App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Comment App is a comment system using the MERN stack (MongoDB, Express.js, React.js, and Node.js) with JWT authentication. It allow authenticated users to view, add, like, and dislike comments on a specific page.
 
-Currently, two official plugins are available:
+## Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Add Comment by User
+- Delete Comment by User (Only the User who write that comment)
+- Edit the Comment/ Delete the Comment
+- Reply to the Comment
+- Like/Dislike to the Comment
+- Responsive Design
 
-## Expanding the ESLint configuration
+## Technology Used
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- React
+- React Router
+- Redux Toolkit/RTK Query
+- JSON Web Token
+- TailwindCSS - Meterial Tailwind
 
-- Configure the top-level `parserOptions` property like this:
+# Package Used
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+- React hook form - for easy use of form datas created/update more.
+- Lodash - For Easy access and work with different data type.
+- Hookform/resolvers and Zod - for validation input
+- SweetAlert 2 - for alert showing
+- Heroicons - for icon library
+- Jwt-decode - jwt
+- Sooner - for showing notification or message
+- Redux-persist - for save the token and user data even on refresh the application on the redux store
+- Redux-persist-transform-encrypt - for encrypted token/accessToken
+- Date-fns - for date format
+
+## Setup
+
+If someone wants to run your project locally, provide detailed instructions on how to do so. Include any dependencies that need to be installed, environment setup, or configuration steps.
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/your-repo.git
+
+# Navigate to the project folder
+cd your-repo
+
+# Install dependencies
+npm install
+
+# Configure environment variables
+# Create a .env.local file and add VITE_API_URL
+# You Can Find it on env.example
+# VITE_API_URL refer to backend API Link
+
+# Run the development server
+npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Live Preview
+
+- Frontend - https://computerwalanet.netlify.app
+- Backend - https://computermanserver.vercel.app

@@ -43,7 +43,6 @@ const RegisterForm = () => {
       const userInfo = {
         username: data.username,
         email: data.email,
-        photo: "",
         password: data.password,
       };
 
