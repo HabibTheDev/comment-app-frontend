@@ -24,7 +24,6 @@ const commentManagementApi = baseApi.injectEndpoints({
     }),
     UpdateComment: builder.mutation({
       query: ({ commentId, comment }) => {
-        console.log(commentId, comment);
         return {
           url: `/comment/${commentId}`,
           method: "PUT",
@@ -79,6 +78,24 @@ const commentManagementApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["comment"],
     }),
+    editReply: builder.mutation({
+      query: ({ commentId, replyId }) => {
+        return {
+          url: `/comment/${commentId}/reply/${replyId}/edit`,
+          method: "PUT",
+        };
+      },
+      invalidatesTags: ["comment"],
+    }),
+    deleteReply: builder.mutation({
+      query: ({ commentId, replyId }) => {
+        return {
+          url: `/comment/${commentId}/reply/${replyId}/delete`,
+          method: "PUT",
+        };
+      },
+      invalidatesTags: ["comment"],
+    }),
 
     replyComment: builder.mutation({
       query: ({ comment: reply, commentId }) => {
@@ -104,4 +121,6 @@ export const {
   useReplyCommentMutation,
   useDislikeReplyMutation,
   useLikeReplyMutation,
+  useDeleteReplyMutation,
+  useEditReplyMutation,
 } = commentManagementApi;

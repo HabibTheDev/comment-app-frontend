@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   useDislikeReplyMutation,
-  useDeleteCommentMutation,
+  useDeleteReplyMutation,
+  useEditReplyMutation,
   useLikeReplyMutation,
 } from "../../../redux/features/comment/commentApi";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 interface ReplyProps {
   reply: any;
@@ -16,9 +18,13 @@ interface ReplyProps {
 const Reply = ({ reply, user, commentId }: ReplyProps) => {
   const [likeComment] = useLikeReplyMutation();
   const [dislikeComment] = useDislikeReplyMutation();
-  const [deleteComment] = useDeleteCommentMutation();
+  const [deleteReply] = useDeleteReplyMutation();
+  const [editReply] = useEditReplyMutation();
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(reply.reply);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = (replyId: string) => {
     setActiveDropdown(activeDropdown === replyId ? null : replyId);
@@ -42,11 +48,49 @@ const Reply = ({ reply, user, commentId }: ReplyProps) => {
 
   const handleDelete = async () => {
     try {
-      await deleteComment({ replyId: reply._id });
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+      });
+
+      if (result.isConfirmed) {
+        await deleteReply({ replyId: reply._id });
+        Swal.fire("Deleted!", "Your reply has been deleted.", "success");
+      }
     } catch (error) {
       toast.error("Failed to delete the reply. Please try again.");
     }
   };
+
+  const handleEdit = async () => {
+    try {
+      await editReply({ replyId: reply._id, content: editContent });
+      setIsEditing(false);
+      toast.success("Reply edited successfully.");
+    } catch (error) {
+      toast.error("Failed to edit the reply. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   return (
     <div className="pl-6 mt-4 border-l-2 border-gray-200 dark:border-gray-600">
@@ -67,7 +111,7 @@ const Reply = ({ reply, user, commentId }: ReplyProps) => {
         </div>
 
         {user && user._id === reply.userId._id && (
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => toggleDropdown(reply._id)}
               className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 dark:text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
@@ -97,7 +141,16 @@ const Reply = ({ reply, user, commentId }: ReplyProps) => {
                   <button
                     type="button"
                     className="w-full block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    onClick={() => handleDelete()}
+                    onClick={() => setIsEditing(true)}
+                  >
+                    Edit
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className="w-full block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={handleDelete}
                   >
                     Delete
                   </button>
@@ -108,13 +161,39 @@ const Reply = ({ reply, user, commentId }: ReplyProps) => {
         )}
       </footer>
 
-      <p className="text-gray-500 dark:text-gray-400">{reply.reply}</p>
+      {isEditing ? (
+        <div>
+          <textarea
+            className="w-full p-2 border rounded"
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+          />
+          <div className="flex items-center mt-4 space-x-4">
+            <button
+              type="button"
+              className="text-sm font-medium text-blue-500 hover:underline"
+              onClick={handleEdit}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="text-sm font-medium text-gray-500 hover:underline"
+              onClick={() => setIsEditing(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p className="text-gray-500 dark:text-gray-400">{reply.reply}</p>
+      )}
 
       <div className="flex items-center mt-4 space-x-4">
         <button
           type="button"
           className="flex items-center text-sm gap-1 text-gray-500 hover:underline dark:text-gray-400 font-medium"
-          onClick={() => handleLike()}
+          onClick={handleLike}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +214,7 @@ const Reply = ({ reply, user, commentId }: ReplyProps) => {
         <button
           type="button"
           className="flex items-center text-sm gap-1 text-gray-500 hover:underline dark:text-gray-400 font-medium"
-          onClick={() => handleDislike()}
+          onClick={handleDislike}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

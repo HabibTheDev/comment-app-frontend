@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { io, Socket } from "socket.io-client";
 import Reply from "../Reply/Reply";
+import Swal from "sweetalert2";
 
 const CommentSection = () => {
   const user = useAppSelector(selectCurrentUser);
@@ -102,12 +103,22 @@ const CommentSection = () => {
   };
 
   const handleDelete = async (commentId: string) => {
-    if (user) {
-      try {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+      });
+
+      if (result.isConfirmed) {
         await deleteComment({ commentId });
-      } catch (error) {
-        toast.error("Failed to delete the comment. Please try again.");
+        Swal.fire("Deleted!", "Your reply has been deleted.", "success");
       }
+    } catch (error) {
+      toast.error("Failed to delete the reply. Please try again.");
     }
   };
 
