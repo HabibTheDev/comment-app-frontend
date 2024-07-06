@@ -2,10 +2,20 @@ import baseApi from "../../api/baseApi";
 
 const commentManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    addComment: builder.mutation({
-      query: ({ comment }) => {
+    getAllComment: builder.query({
+      query: () => {
         return {
-          url: `/comment/`,
+          url: `/comment`,
+          method: "GET",
+        };
+      },
+      providesTags: ["comment"],
+    }),
+
+    addComment: builder.mutation({
+      query: (comment) => {
+        return {
+          url: `/comment`,
           method: "POST",
           body: comment,
         };
@@ -31,6 +41,36 @@ const commentManagementApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["comment"],
     }),
+    likeComment: builder.mutation({
+      query: ({ commentId }) => {
+        return {
+          url: `/comment/like/${commentId}`,
+          method: "PUT",
+        };
+      },
+      invalidatesTags: ["comment"],
+    }),
+    disLikeComment: builder.mutation({
+      query: ({ commentId }) => {
+        return {
+          url: `/comment/dislike/${commentId}`,
+          method: "PUT",
+        };
+      },
+      invalidatesTags: ["comment"],
+    }),
+
+    replyComment: builder.mutation({
+      query: ({ comment: reply, commentId }) => {
+        console.log(reply, commentId);
+        return {
+          url: `/comment/${commentId}/reply`,
+          method: "POST",
+          body: { reply },
+        };
+      },
+      invalidatesTags: ["comment"],
+    }),
   }),
 });
 
@@ -38,4 +78,8 @@ export const {
   useAddCommentMutation,
   useDeleteCommentMutation,
   useUpdateCommentMutation,
+  useGetAllCommentQuery,
+  useLikeCommentMutation,
+  useDisLikeCommentMutation,
+  useReplyCommentMutation,
 } = commentManagementApi;

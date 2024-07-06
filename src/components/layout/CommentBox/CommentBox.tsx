@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FieldValues, SubmitErrorHandler } from "react-hook-form";
 import { useAddCommentMutation } from "../../../redux/features/comment/commentApi";
 import { showRightTopAlert } from "../../ui/Alert/ShowRightToAlert";
@@ -15,9 +16,7 @@ const CommentBox = () => {
     const { comment } = data;
 
     try {
-      const response = await addComment({
-        comment: comment,
-      });
+      const response = await addComment({ comment });
 
       if ("data" in response) {
         showRightTopAlert("success", "Success", `${response.data.message}`);
@@ -28,8 +27,12 @@ const CommentBox = () => {
           "Failed to Add Comment, please try again."
         );
       }
-    } catch (error) {
-      showRightTopAlert("error", "Error", "Failed to Add Comment, try again.");
+    } catch (error: any) {
+      showRightTopAlert(
+        "error",
+        `${error.data.message}`,
+        "Failed to Add Comment, please try again."
+      );
     }
   };
   return (
