@@ -45,7 +45,7 @@ const LoginForm = () => {
           };
 
           dispatch(setUser(saveUser));
-          navigate(`/`, { replace: true });
+          navigate(`/app`, { replace: true });
           methods.reset();
           toast.success("Login successful!");
         }
@@ -62,8 +62,8 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
-      <div className="max-w-screen-lg mx-auto ">
+    <div className="flex items-center justify-center min-h-screen bg-blue-900">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl text-black-primary font-bold text-center mb-8">
           Login
         </h1>
@@ -88,7 +88,7 @@ const LoginForm = () => {
             </Form>
           </FormProvider>
         </div>
-        <p className="text-center mt-5 fontWeight-semibold text-14">
+        <p className="text-center mt-5 font-semibold text-sm">
           Don’t have an account?
           <Link to="/sign-up">
             <span className="text-blue-primary"> Sign up</span>

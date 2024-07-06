@@ -12,12 +12,10 @@ import { logOut, setUser } from "../features/auth/authSlice";
 
 //customized base Query and every backend data get request send accessToken
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api",
+  baseUrl: import.meta.env.VITE_API_URL,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
-
-
 
     if (token) {
       headers.set("authorization", `${token}`);

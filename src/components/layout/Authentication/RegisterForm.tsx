@@ -49,8 +49,6 @@ const RegisterForm = () => {
 
       const res = await registerdUser(userInfo).unwrap();
 
-      console.log(registerdUser);
-
       if (res) {
         const registerEmail = {
           email: res?.data?.email,
@@ -59,7 +57,7 @@ const RegisterForm = () => {
         dispatch(setRegisterEmail(registerEmail));
         methods.reset();
         setLoading(false);
-        navigate("/");
+        navigate("/app");
       }
     } catch (error: any) {
       if (error?.data?.error) {
@@ -83,9 +81,9 @@ const RegisterForm = () => {
     }
   };
   return (
-    <div>
-      <div className="max-w-screen-lg mx-auto">
-        <h1 className="text-3xl  text-black-primary font-bold text-center mb-8">
+    <div className="flex items-center justify-center min-h-screen bg-blue-900">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+        <h1 className="text-3xl text-black-primary font-bold text-center mb-8">
           Sign Up
         </h1>
         <div className="max-w-screen-sm mx-auto">
@@ -103,12 +101,11 @@ const RegisterForm = () => {
                 name="email"
                 placeholder="Enter email"
               />
-
               <MainPassword
                 name="password"
                 label="Password"
                 type="password"
-                placeholder=" Enter Password"
+                placeholder="Enter Password"
               />
               <MainPassword
                 name="confirmPassword"
@@ -116,22 +113,17 @@ const RegisterForm = () => {
                 type="password"
                 placeholder="Re-enter password"
               />
-
-              {error && <p className="text-[#F00] mt-1 text-[13px]">{error}</p>}
-
-              <Button
-                className="w-full mt-[30px] submit-button"
-                htmlType="submit"
-              >
+              {error && <p className="text-red-500 mt-1 text-xs">{error}</p>}
+              <Button className="w-full mt-8 submit-button" htmlType="submit">
                 {isLoading || loading ? <ButtonLoadingAnimation /> : "Sign up"}
               </Button>
             </Form>
           </FormProvider>
         </div>
-        <p className="text-center mt-4">
+        <p className="text-center mt-4 text-sm">
           Have an account?
           <Link to="/login">
-            <span className="text-blue-primary">Login</span>
+            <span className="text-blue-primary"> Login</span>
           </Link>
         </p>
       </div>
