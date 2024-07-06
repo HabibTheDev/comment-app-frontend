@@ -1,20 +1,10 @@
 import { Outlet } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { logOut, selectCurrentUser } from "../../redux/features/auth/authSlice";
-import { Button } from "antd";
+import NavbarArea from "./Navbar/Navbar";
 
 const MainLayout = () => {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(selectCurrentUser);
-  const handleLogout = () => {
-    dispatch(logOut());
-  };
   return (
-    <div>
-      <h2>{user?.email}</h2>
-      <h2>
-        <Button onClick={handleLogout}>Logout</Button>
-      </h2>
+    <div className="min-h-screen bg-blue-gray-50/50" style={{ height: "100%" }}>
+      <NavbarArea />
       <Outlet />
     </div>
   );

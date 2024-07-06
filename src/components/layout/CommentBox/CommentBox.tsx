@@ -8,8 +8,11 @@ import { Button } from "antd";
 import { commentDataSchema } from "../../../type/CommentType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ButtonLoadingAnimation from "../../ui/Animation/ButtonAnimation";
+import { useAppSelector } from "../../../redux/hook";
+import { selectCurrentUser } from "../../../redux/features/auth/authSlice";
 
 const CommentBox = () => {
+  const user = useAppSelector(selectCurrentUser);
   const [addComment, { isLoading }] = useAddCommentMutation();
 
   const handleSubmit: SubmitErrorHandler<FieldValues> = async (data) => {
@@ -44,7 +47,7 @@ const CommentBox = () => {
         <MainCommentBox
           name={"comment"}
           label={"Add Comment"}
-          placeholder="Write Your Comment..."
+          placeholder={`Write Your Comment ${user?.username}...`}
         />
         <Button
           htmlType="submit"
