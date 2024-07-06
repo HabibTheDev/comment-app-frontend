@@ -8,6 +8,7 @@ import {
   useGetAllCommentQuery,
   useLikeCommentMutation,
   useReplyCommentMutation,
+  useUpdateCommentMutation,
 } from "../../../redux/features/comment/commentApi";
 import { toast } from "sonner";
 import { io, Socket } from "socket.io-client";
@@ -28,13 +29,16 @@ const CommentSection = () => {
   const [dislikeComment] = useDisLikeCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [replyComment] = useReplyCommentMutation();
+  const [updateComment] = useUpdateCommentMutation();
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
   const [showReplyInputFor, setShowReplyInputFor] = useState<string | null>(
     null
   );
+  const [editText, setEditText] = useState("");
   const [isReplying, setIsReplying] = useState(false); // Track if user is replying
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
 
   useEffect(() => {
     socketRef.current = io("http://localhost:5000", {
@@ -144,6 +148,27 @@ const CommentSection = () => {
     setIsReplying(false); // Reset replying state
   };
 
+  const handleEdit = (commentId: string, currentComment: string) => {
+    setEditingCommentId(commentId);
+    setEditText(currentComment);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCommentId(null);
+    setEditText("");
+  };
+
+  const handleUpdate = async (commentId: string) => {
+    try {
+      await updateComment({ commentId, comment: editText });
+      toast.success("Comment updated successfully!");
+      setEditingCommentId(null);
+      setEditText("");
+    } catch (error) {
+      toast.error("Failed to update the comment. Please try again.");
+    }
+  };
+
   if (isLoading) {
     return <p>Loading comments...</p>;
   }
@@ -212,7 +237,9 @@ const CommentSection = () => {
                           <button
                             type="button"
                             className="w-full block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            onClick={() => handleDelete(comment._id)}
+                            onClick={() =>
+                              handleEdit(comment._id, comment.comment)
+                            }
                           >
                             Edit
                           </button>
@@ -231,9 +258,33 @@ const CommentSection = () => {
                   </div>
                 )}
               </footer>
-              <p className="text-gray-500 dark:text-gray-400">
-                {comment.comment}
-              </p>
+              {editingCommentId === comment._id ? (
+                <div>
+                  <textarea
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    className="w-full p-2 border rounded"
+                  />
+                  <div className="flex items-center mt-2">
+                    <button
+                      onClick={() => handleUpdate(comment._id)}
+                      className="inline-flex items-center py-2 px-4 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="inline-flex items-center py-2 px-4 ml-2 text-sm font-medium text-center text-white bg-gray-600 rounded-lg hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400">
+                  {comment.comment}
+                </p>
+              )}
               <div className="flex items-center mt-4 space-x-4">
                 <button
                   type="button"

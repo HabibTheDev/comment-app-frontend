@@ -23,11 +23,12 @@ const commentManagementApi = baseApi.injectEndpoints({
       invalidatesTags: ["comment"],
     }),
     UpdateComment: builder.mutation({
-      query: ({ comment, commentId }) => {
+      query: ({ commentId, comment }) => {
+        console.log(commentId, comment);
         return {
           url: `/comment/${commentId}`,
           method: "PUT",
-          body: comment,
+          body: { comment },
         };
       },
       invalidatesTags: ["comment"],
