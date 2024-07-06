@@ -60,6 +60,25 @@ const commentManagementApi = baseApi.injectEndpoints({
       invalidatesTags: ["comment"],
     }),
 
+    likeReply: builder.mutation({
+      query: ({ commentId, replyId }) => {
+        return {
+          url: `/comment/${commentId}/reply/${replyId}/like`,
+          method: "PUT",
+        };
+      },
+      invalidatesTags: ["comment"],
+    }),
+    dislikeReply: builder.mutation({
+      query: ({ commentId, replyId }) => {
+        return {
+          url: `/comment/${commentId}/reply/${replyId}/dislike`,
+          method: "PUT",
+        };
+      },
+      invalidatesTags: ["comment"],
+    }),
+
     replyComment: builder.mutation({
       query: ({ comment: reply, commentId }) => {
         console.log(reply, commentId);
@@ -82,4 +101,6 @@ export const {
   useLikeCommentMutation,
   useDisLikeCommentMutation,
   useReplyCommentMutation,
+  useDislikeReplyMutation,
+  useLikeReplyMutation,
 } = commentManagementApi;

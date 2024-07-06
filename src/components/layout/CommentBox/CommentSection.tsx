@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../../redux/hook";
 import { selectCurrentUser } from "../../../redux/features/auth/authSlice";
 import {
@@ -11,6 +11,7 @@ import {
 } from "../../../redux/features/comment/commentApi";
 import { toast } from "sonner";
 import { io, Socket } from "socket.io-client";
+import Reply from "../Reply/Reply";
 
 const CommentSection = () => {
   const user = useAppSelector(selectCurrentUser);
@@ -20,7 +21,7 @@ const CommentSection = () => {
     data: commentsData,
     isLoading,
     isError,
-    refetch: refetchComments, // Destructure refetch function from useGetAllCommentQuery
+    refetch: refetchComments,
   } = useGetAllCommentQuery(undefined);
 
   const [likeComment] = useLikeCommentMutation();
@@ -33,6 +34,7 @@ const CommentSection = () => {
   const [showReplyInputFor, setShowReplyInputFor] = useState<string | null>(
     null
   );
+  const [isReplying, setIsReplying] = useState(false); // Track if user is replying
 
   useEffect(() => {
     socketRef.current = io("http://localhost:5000", {
@@ -88,7 +90,7 @@ const CommentSection = () => {
   const handleLike = async (commentId: string) => {
     if (user) {
       try {
-        await likeComment({ userId: user._id, commentId });
+        await likeComment({ commentId });
       } catch (error) {
         toast.error("Failed to like the comment. Please try again.");
       }
@@ -108,7 +110,7 @@ const CommentSection = () => {
   const handleDislike = async (commentId: string) => {
     if (user) {
       try {
-        await dislikeComment({ userId: user._id, commentId });
+        await dislikeComment({ commentId });
       } catch (error) {
         toast.error("Failed to dislike the comment. Please try again.");
       }
@@ -116,7 +118,7 @@ const CommentSection = () => {
   };
 
   const handleReply = async (commentId: string) => {
-    if (user) {
+    if (user && isReplying) {
       try {
         await replyComment({
           comment: replyText,
@@ -124,6 +126,7 @@ const CommentSection = () => {
         });
         setReplyText("");
         setShowReplyInputFor(null);
+        setIsReplying(false);
       } catch (error) {
         toast.error("Failed to reply to the comment. Please try again.");
       }
@@ -132,11 +135,13 @@ const CommentSection = () => {
 
   const handleShowReplyInput = (commentId: string) => {
     setShowReplyInputFor(commentId);
+    setIsReplying(true); // Mark user as replying
   };
 
   const handleCancelReply = () => {
     setShowReplyInputFor(null);
     setReplyText("");
+    setIsReplying(false); // Reset replying state
   };
 
   if (isLoading) {
@@ -146,6 +151,7 @@ const CommentSection = () => {
   if (isError) {
     return <p>Error fetching comments.</p>;
   }
+
   return (
     <div>
       <section className="bg-white dark:bg-gray-900 py-8 lg:py-16 antialiased">
@@ -153,7 +159,9 @@ const CommentSection = () => {
           {commentsData?.data.comments.map((comment: any) => (
             <article
               key={comment._id}
-              className="p-3 text-base bg-white rounded-lg dark:bg-gray-900"
+              className={`p-3 text-base bg-white rounded-lg dark:bg-gray-900 ${
+                comment.replies.length > 0 ? "border border-blue-500" : ""
+              }`}
             >
               <footer className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
@@ -247,7 +255,22 @@ const CommentSection = () => {
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M14.7 9.3L12 6.6l-2.7 2.7a1 1 0 11-1.4-1.4L12 .6l4.1 7.3a1 1 0 11-1.4 1.4z"
+                      d="M5 15s1-1 3-1 3 1 3 1M19 9s-1 1-3 1-3-1-3-1"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 23V12"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 8v.01"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 5v.01"
                     />
                   </svg>
                   {comment.likes.length}
@@ -324,6 +347,15 @@ const CommentSection = () => {
                   </div>
                 </div>
               )}
+
+              {comment.replies.map((reply: any) => (
+                <Reply
+                  key={reply._id}
+                  reply={reply}
+                  user={user}
+                  commentId={comment._id}
+                />
+              ))}
             </article>
           ))}
         </div>
