@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hook";
-
 import { verifyToken } from "../utils/verifyToken";
 import { logOut, selectCurrentToken } from "../redux/features/auth/authSlice";
 
