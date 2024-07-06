@@ -57,5 +57,5 @@ npm run dev
 
 ## Live Preview
 
-- Frontend - https://computerwalanet.netlify.app
-- Backend - https://computermanserver.vercel.app
+Backend - https://comment-app-cyan.vercel.app/
+Frontend - https://comment-app.netlify.app/
